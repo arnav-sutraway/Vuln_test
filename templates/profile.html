@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+</head>
+<body>
+
+    <h1>User Profile</h1>
+
+    <!-- SAFE: Escaped output -->
+    <p>Username: {{ username }}</p>
+
+    <!-- XSS #5: Unsafe HTML rendering -->
+    <div class="bio">
+        {{ bio | safe }}
+    </div>
+
+</body>
+</html>

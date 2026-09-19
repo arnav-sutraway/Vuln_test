@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search</title>
+</head>
+<body>
+
+    <h1>Search Results</h1>
+
+    <!-- SAFE: Jinja2 autoescaping -->
+    <p>You searched for: {{ query }}</p>
+
+    <!-- XSS #4: Explicitly disabling escaping -->
+    <div>
+        {{ query | safe }}
+    </div>
+
+</body>
+</html>

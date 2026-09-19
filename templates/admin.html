@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Comments</title>
+</head>
+<body>
+
+    <h1>All User Comments</h1>
+
+    {% for username, comment in comments %}
+
+        <div class="comment">
+            <strong>{{ username }}</strong>
+
+            <!-- Stored XSS #6: Unsafe rendering of database content -->
+            <div class="comment-body">
+                {{ comment | safe }}
+            </div>
+        </div>
+
+    {% endfor %}
+
+</body>
+</html>
