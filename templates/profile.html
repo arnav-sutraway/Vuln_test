@@ -11,9 +11,15 @@
     <p>Username: {{ username }}</p>
 
     <!-- XSS #5: Unsafe HTML rendering -->
+    <!-- Vulnerable: using |safe in Jinja2 or dangerouslySetInnerHTML in React -->
+    <div>
+        <h1>Welcome back, </h1>
+        <p>{{ user_bio | safe }}</p>
+    </div>
     <div class="bio">
         {{ bio | safe }}
     </div>
 
 </body>
 </html>
+

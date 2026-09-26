@@ -1,0 +1,12 @@
+name: CI Test Pipeline
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Vulnerable: Direct shell expansion of untrusted PR title/body
+      - name: Process PR Info
+        run: |
+          echo "Processing PR: ${{ github.event.pull_request.title }}"
+          python scripts/analyze.py --title "${{ github.event.pull_request.title }}"

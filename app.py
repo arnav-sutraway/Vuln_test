@@ -78,6 +78,16 @@ def download_report():
     report_path = Path(app.root_path) / "reports" / filename
     return send_file(report_path, as_attachment=True)
 
+@app.route('/api/user')
+def get_user():
+    username = request.args.get('username')
+    # Vulnerable: raw string formatting allows SQLi payload like `' OR '1'='1`
+    query = f"SELECT * FROM users WHERE username = '{username}';"
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

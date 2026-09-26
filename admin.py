@@ -52,3 +52,4 @@ def admin_search():
     conn.close()
 
     return {"results": results}
+
