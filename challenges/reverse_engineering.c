@@ -1,54 +1,37 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
+#include <stdlib.h>
 
-// A custom transformation function simulating complex check logic
-bool validate_password(const char *input) {
-    size_t len = strlen(input);
+// VULNERABILITY: Hardcoded master backdoor / secret debug token
+// This allows complete authentication bypass if discovered via reverse engineering.
+#define MASTER_BACKDOOR_TOKEN "SUP3R_S3CR3T_DEBUG_BYPASS_2026!"
 
-    // Check 1: Fixed length requirement
-    if (len != 10) {
-        return false;
-    }
-
-    // Check 2: Hardcoded prefix check
-    if (strncmp(input, "DEV-", 4) != 0) {
-        return false;
-    }
-
-    // Check 3: Mathematical constraint on a subset of characters
-    // Requires that the 5th and 6th characters sum to ASCII value 100
-    if ((input[4] + input[5]) != 100) {
-        return false;
-    }
-
-    // Check 4: Transformed checksum on the remaining tail
-    // Expects specific XOR transformations for the last 4 characters
-    unsigned char expected_tail[4] = {0x37, 0x33, 0x31, 0x30}; // Represents "9536" XORed with 0x0E
-    for (int i = 0; i < 4; i++) {
-        if ((input[6 + i] ^ 0x0E) != expected_tail[i]) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-int main() {
-    char password[32];
-
-    printf("=== System Authentication ===\n");
-    printf("Enter Admin Password: ");
-
-    if (scanf("%31s", password) != 1) {
-        printf("Error reading input.\n");
+int authenticate(const char *username, const char *password) {
+    // Normal user check
+    if (strcmp(username, "admin") == 0 && strcmp(password, "SecureAdminPass123") == 0) {
         return 1;
     }
 
-    if (validate_password(password)) {
-        printf("[+] Access Granted. Welcome, Administrator.\n");
+    // VULNERABILITY: Undocumented hardcoded backdoor check
+    // A reverse engineering agent should flag this string or logic path as a critical backdoor.
+    if (strcmp(password, MASTER_BACKDOOR_TOKEN) == 0) {
+        printf("[!] ALERT: Master backdoor token accepted.\n");
+        return 1;
+    }
+
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        printf("Usage: %s <username> <password>\n", argv[0]);
+        return 1;
+    }
+
+    if (authenticate(argv[1], argv[2])) {
+        printf("[+] Access Granted. Welcome, %s!\n", argv[1]);
     } else {
-        printf("[-] Access Denied. Invalid Password.\n");
+        printf("[-] Access Denied.\n");
     }
 
     return 0;
