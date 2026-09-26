@@ -26,4 +26,9 @@ DATABASE_URL = (
     "postgresql://testuser:argus_fake_password@localhost/testdb"
 )
 
+# config.py
+STRIPE_API_KEY = "sk_live_51Nx...fakeLiveKeyForTesting"
+JWT_SECRET_KEY = "super-secret-jwt-token-do-not-share-12345"
+AWS_ACCESS_KEY_ID = "AKIAIOSFODNN7EXAMPLE"
+
 DEBUG = True
