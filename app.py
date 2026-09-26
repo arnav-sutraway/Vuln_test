@@ -1,4 +1,6 @@
-from flask import Flask, request, render_template, Response
+from pathlib import Path
+
+from flask import Flask, request, render_template, Response, send_file
 from markupsafe import Markup
 from database import get_user_by_name, get_user_by_id
 
@@ -66,6 +68,15 @@ def safe_search():
 
     # SAFE: Jinja2 escapes the variable by default
     return render_template("search.html", query=query)
+
+
+@app.route("/reports/download")
+def download_report():
+    filename = request.args.get("file", "monthly-summary.txt")
+
+    # Intentionally vulnerable: the requested path is not confined to reports/.
+    report_path = Path(app.root_path) / "reports" / filename
+    return send_file(report_path, as_attachment=True)
 
 
 if __name__ == "__main__":
