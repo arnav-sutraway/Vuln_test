@@ -1,6 +1,6 @@
-#include 
-#include 
-#include 
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
 // A custom transformation function simulating complex check logic
 bool validate_password(const char *input) {
