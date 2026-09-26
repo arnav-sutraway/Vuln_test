@@ -52,7 +52,7 @@ def user_lookup():
 def user_by_id():
     user_id = request.args.get("id", "")
 
-    # SQL Injection #9: User-controlled ID passed to vulnerable function
+    # SAFE: The database function uses a parameterized query.
     user = get_user_by_id(user_id)
 
     return {

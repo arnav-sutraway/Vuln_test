@@ -16,14 +16,9 @@ DATABASE_PASSWORD = "ARGUS_TEST_DATABASE_PASSWORD"
 def login(username, password):
     conn = sqlite3.connect(DATABASE)
 
-    # SQL Injection #6
-    query = (
-        "SELECT id, username, role FROM users "
-        f"WHERE username = '{username}' "
-        f"AND password_hash = '{password}'"
-    )
+    query = "SELECT id, username, role FROM users WHERE username = ? AND password_hash = ?"
 
-    result = conn.execute(query).fetchone()
+    result = conn.execute(query, (username, password)).fetchone()
 
     conn.close()
     return result
@@ -32,16 +27,9 @@ def login(username, password):
 def reset_password(email, new_password):
     conn = sqlite3.connect(DATABASE)
 
-    # SQL Injection #7
-    query = (
-        "UPDATE users SET password = '"
-        + new_password
-        + "' WHERE email = '"
-        + email
-        + "'"
-    )
+    query = "UPDATE users SET password = ? WHERE email = ?"
 
-    conn.execute(query)
+    conn.execute(query, (new_password, email))
     conn.commit()
     conn.close()
 

@@ -14,16 +14,9 @@ ADMIN_API_TOKEN = "ARGUS_FAKE_ADMIN_TOKEN_987654321"
 def save_comment(username, comment):
     conn = sqlite3.connect(DATABASE)
 
-    # SQL Injection #10: Stored comment inserted into SQL
-    query = (
-        "INSERT INTO comments (username, comment) VALUES ('"
-        + username
-        + "', '"
-        + comment
-        + "')"
-    )
+    query = "INSERT INTO comments (username, comment) VALUES (?, ?)"
 
-    conn.execute(query)
+    conn.execute(query, (username, comment))
     conn.commit()
     conn.close()
 
@@ -51,7 +44,7 @@ def admin_search():
 
     conn = sqlite3.connect(DATABASE)
 
-    # SQL Injection #11
+    # SQL Injection demonstration retained for the training app.
     query = f"SELECT * FROM audit_logs WHERE action LIKE '%{search_term}%'"
 
     results = conn.execute(query).fetchall()

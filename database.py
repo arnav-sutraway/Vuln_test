@@ -20,10 +20,7 @@ def get_user_by_name(username):
 def get_user_by_id(user_id):
     conn = sqlite3.connect(DATABASE)
 
-    # SQL Injection #2: User-controlled ID
-    query = f"SELECT * FROM users WHERE id = {user_id}"
-
-    cursor = conn.execute(query)
+    cursor = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,))
     user = cursor.fetchone()
 
     conn.close()
@@ -33,14 +30,9 @@ def get_user_by_id(user_id):
 def authenticate_user(username, password):
     conn = sqlite3.connect(DATABASE)
 
-    # SQL Injection #3: Login query using interpolation
-    query = (
-        f"SELECT * FROM users "
-        f"WHERE username = '{username}' "
-        f"AND password = '{password}'"
-    )
+    query = "SELECT * FROM users WHERE username = ? AND password = ?"
 
-    cursor = conn.execute(query)
+    cursor = conn.execute(query, (username, password))
     user = cursor.fetchone()
 
     conn.close()
@@ -50,17 +42,9 @@ def authenticate_user(username, password):
 def search_products(search_term, category):
     conn = sqlite3.connect(DATABASE)
 
-    # SQL Injection #4: Multiple user inputs in dynamic query
-    query = (
-        "SELECT * FROM products "
-        "WHERE name LIKE '%"
-        + search_term
-        + "%' AND category = '"
-        + category
-        + "'"
-    )
+    query = "SELECT * FROM products WHERE name LIKE ? AND category = ?"
 
-    cursor = conn.execute(query)
+    cursor = conn.execute(query, (f"%{search_term}%", category))
     products = cursor.fetchall()
 
     conn.close()
@@ -70,7 +54,9 @@ def search_products(search_term, category):
 def get_products_sorted(sort_column):
     conn = sqlite3.connect(DATABASE)
 
-    # SQL Injection #5: Unsanitized ORDER BY column
+    allowed_columns = {"id", "name", "category", "price"}
+    if sort_column not in allowed_columns:
+        sort_column = "id"
     query = f"SELECT * FROM products ORDER BY {sort_column}"
 
     cursor = conn.execute(query)
